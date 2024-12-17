@@ -1,0 +1,15 @@
+.footer {
+  background-color: #000;
+  color: #00ff41;
+  text-align: center;
+  padding: 20px;
+  font-family: 'Courier New', monospace;
+
+  a {
+    color: #00ff41;
+    text-decoration: none;
+    &:hover {
+      text-shadow: 0 0 10px #00ff41;
+    }
+  }
+}

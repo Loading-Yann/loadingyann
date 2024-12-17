@@ -1,0 +1,30 @@
+.header {
+  background-color: #000;
+  color: #00ff41;
+  text-align: center;
+  padding: 10px;
+
+  h1 {
+    font-family: 'Courier New', monospace;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+
+    li {
+      margin: 0 15px;
+
+      a {
+        color: #00ff41;
+        text-decoration: none;
+        font-weight: bold;
+
+        &:hover {
+          text-shadow: 0 0 10px #00ff41;
+        }
+      }
+    }
+  }
+}
