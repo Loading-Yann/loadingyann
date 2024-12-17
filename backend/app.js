@@ -1,9 +1,9 @@
-const express = require('express');
-const morgan = require('morgan');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const winston = require('./logs/winston');
-const authRoutes = require('./routes/auth.route');
+import express from 'express';
+import morgan from 'morgan';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import  winston from './logs/winston.js';
+import authRoutes from './routes/auth.route.js';
 
 const app = express();
 
@@ -30,5 +30,8 @@ app.use('/api/auth', authRoutes);
 app.get('/', (req, res) => {
   res.send('Bienvenue sur le backend de Loading-Yann !');
 });
+
+const messageRoutes = require('./routes/message.route');
+app.use('/api/messages', messageRoutes);
 
 module.exports = app;

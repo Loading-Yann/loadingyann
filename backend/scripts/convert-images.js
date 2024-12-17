@@ -1,6 +1,6 @@
-const sharp = require('sharp');
-const fs = require('fs');
-const path = require('path');
+import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
 
 const inputDir = 'images'; // Dossier contenant les images
 const outputDir = '../frontend/src/img/webp'; // Dossier de sortie pour les images WebP

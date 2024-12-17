@@ -56,5 +56,35 @@ const Contact: React.FC = () => {
     </div>
   );
 };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const formData = {
+    name,
+    firstname,
+    phone,
+    email,
+    subject,
+    content,
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/api/messages/send-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      alert('Message envoyé avec succès !');
+    } else {
+      alert('Erreur lors de l\'envoi du message.');
+    }
+  } catch (error) {
+    console.error('Erreur :', error);
+    alert('Erreur serveur.');
+  }
+};
+
 
 export default Contact;
