@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
-
+import cors from 'cors';
 // Configurations
 dotenv.config();
 const app = express();
@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(helmet());
-
+app.use(cors());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);

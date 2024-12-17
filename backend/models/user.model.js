@@ -1,14 +1,10 @@
 import mongoose from 'mongoose';
 
-const { Schema, model, models } = mongoose;
-
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  quality: { type: String, default: 'user' }, // admin, editor, user
+  email: { type: String, default: null }, // Enlève "unique: true" si ce n'est pas nécessaire
+  quality: { type: String, enum: ['admin', 'editor', 'viewer'], default: 'viewer' },
 });
 
-// Vérifie si le modèle existe déjà, sinon le crée
-const User = models.User || model('User', userSchema);
-
-export default User;
+export default mongoose.model('User', userSchema);

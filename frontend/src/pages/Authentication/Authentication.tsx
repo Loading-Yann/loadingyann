@@ -6,28 +6,34 @@ const Authentication: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Données envoyées :', { username, password });
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
+      console.log('Réponse de l\'API :', response);
+
       const data = await response.json();
+      console.log('Données reçues :', data);
 
       if (response.ok) {
         sessionStorage.setItem('token', data.token);
         alert('Connexion réussie.');
         window.location.href = '/admin';
       } else {
-        setError(data.message);
+        setError(data.message || 'Identifiants incorrects.');
       }
-    } catch (err) {
-      console.error(err);
-      setError('Erreur de connexion.');
+    } catch (err: any) {
+      console.error('Erreur de connexion :', err.message);
+      setError('Impossible de se connecter au serveur.');
     }
   };
 
