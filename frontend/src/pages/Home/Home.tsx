@@ -1,10 +1,14 @@
 import React from 'react';
+import contentData from '../../data/contentData.json';
 import './Home.scss';
 
 const Home: React.FC = () => {
+  const { title, description } = contentData.home;
+
   return (
     <div className="home">
-      <h1>Bienvenue sur la page d'accueil de Loading-Yann !</h1>
+      <h1>{title}</h1>
+      <p>{description}</p>
     </div>
   );
 };

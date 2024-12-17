@@ -1,16 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import contentData from '../../data/contentData.json';
 import './Header.scss';
 
-const Header = () => {
+const Header: React.FC = () => {
+  const { title, menu } = contentData.header;
+
   return (
     <header className="header">
-      <h1>Loading-Yann</h1>
+      <h1>{title}</h1>
       <nav>
         <ul>
-          <li><Link to="/">Accueil</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
-          <li><Link to="/apropos">À Propos</Link></li>
+          {menu.map((item, index) => (
+            <li key={index}>
+              <Link to={item.path}>{item.label}</Link>
+            </li>
+          ))}
         </ul>
       </nav>
     </header>

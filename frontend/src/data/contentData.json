@@ -1,0 +1,22 @@
+{
+  "header": {
+    "title": "Loading-Yann",
+    "menu": [
+      { "label": "Accueil", "path": "/" },
+      { "label": "Contact", "path": "/contact" }
+    ]
+  },
+  "home": {
+    "title": "Bienvenue sur la page d'accueil de Loading-Yann !",
+    "description": "Découvrez mes compétences et projets dans le domaine du développement web."
+  },
+  "contact": {
+    "title": "Contactez-moi",
+    "formInstructions": "Remplissez le formulaire ou écrivez-moi directement."
+  },
+  "footer": {
+    "company": "Loading-Yann",
+    "email": "loading.yann@gmail.com",
+    "phone": "06 XX XX XX XX"
+  }
+}

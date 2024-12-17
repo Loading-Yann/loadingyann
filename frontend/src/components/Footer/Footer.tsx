@@ -1,16 +1,15 @@
 import React from 'react';
+import contentData from '../../data/contentData.json';
 import './Footer.scss';
 
-const Footer = () => {
+const Footer: React.FC = () => {
+  const { company, email, phone } = contentData.footer;
+
   return (
     <footer className="footer">
-      <div className="footer-content">
-        <p>Nom : Yann</p>
-        <p>Société : Loading-Yann</p>
-        <p>Téléphone : 06 XX XX XX XX</p>
-        <p>Email : <a href="mailto:loading.yann@gmail.com">loading.yann@gmail.com</a></p>
-        <p><a href="/contact">Accéder au formulaire de contact</a></p>
-      </div>
+      <p>© {new Date().getFullYear()} {company}. Tous droits réservés.</p>
+      <p>Email : <a href={`mailto:${email}`}>{email}</a></p>
+      <p>Téléphone : {phone}</p>
     </footer>
   );
 };
