@@ -1,6 +1,6 @@
 import React from 'react';
 import contentData from '../../data/contentData.json';
-import './Footer.scss';
+import './_footer.scss';
 
 const Footer: React.FC = () => {
   const { company, email, phone } = contentData.footer;

@@ -1,0 +1,105 @@
+@import '../../styles/_variables.scss';
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Centre verticalement
+  justify-content: center; // Centre horizontalement
+  text-align: center;
+  font-family: $font-family;
+  padding: 2rem;
+  background-color: $background-dark;
+  color: $matrix-green;
+
+  width: 100%;
+  max-width: 800px; // Largeur maximale du formulaire
+  margin: 10px auto; // Centre horizontalement avec une marge de 10px
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+
+    .contact__button {
+      margin: 0 0.5rem;
+      padding: $padding;
+      border: 2px solid $border-color;
+      border-radius: $border-radius;
+      background: transparent;
+      color: $matrix-green;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &.active,
+      &:hover {
+        border-color: lighten($matrix-green, 20%);
+        text-shadow: 0 0 8px $matrix-green;
+      }
+    }
+  }
+
+  &__textarea,
+  &__form {
+    width: 100%;
+    max-width: 600px;
+
+    textarea,
+    input,
+    select {
+      width: 100%;
+      padding: $padding;
+      margin-bottom: 1rem;
+      border: 2px solid $border-color;
+      background-color: transparent;
+      color: $matrix-green;
+      border-radius: $border-radius;
+      outline: none;
+      font-family: $font-family;
+      font-size: 1rem;
+
+      &::placeholder {
+        color: lighten($matrix-green, 30%);
+      }
+
+      &:focus {
+        box-shadow: 0 0 10px $matrix-green;
+      }
+    }
+  }
+
+  &__send {
+    background-color: $matrix-green;
+    color: $background-dark;
+    border: none;
+    padding: $padding;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: lighten($matrix-green, 20%);
+      box-shadow: 0 0 10px $matrix-green;
+    }
+  }
+
+  // Breakpoints pour le responsive
+  @media (max-width: map-get($breakpoints, large)) {
+    max-width: 90%; // Réduit la largeur à 90% sur les grands écrans
+  }
+
+  @media (max-width: map-get($breakpoints, medium)) {
+    padding: 1rem;
+  }
+
+  @media (max-width: map-get($breakpoints, small)) {
+    &__buttons {
+      flex-direction: column;
+
+      .contact__button {
+        margin: 0.5rem 0; // Réduit les marges verticalement
+      }
+    }
+  }
+}

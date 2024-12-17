@@ -1,5 +1,5 @@
 import React from 'react';
-import './Error.scss';
+import './_error.scss';
 
 const Home: React.FC = () => {
   return (

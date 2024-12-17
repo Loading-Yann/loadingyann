@@ -1,6 +1,6 @@
 import React from 'react';
 import contentData from '../../data/contentData.json';
-import './Home.scss';
+import './_home.scss';
 
 const Home: React.FC = () => {
   const { title, description } = contentData.home;

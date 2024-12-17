@@ -1,0 +1,18 @@
+// Couleurs
+$matrix-green: #00ff00;
+$background-dark: #111;
+$border-color: $matrix-green;
+
+// Typographie
+$font-family: 'Courier New', Courier, monospace;
+
+// Autres variables
+$padding: 12px;
+$border-radius: 6px;
+
+// Breakpoints pour le responsive
+$breakpoints: (
+  small: 480px,
+  medium: 768px,
+  large: 1024px
+);

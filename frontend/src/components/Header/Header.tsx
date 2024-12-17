@@ -1,23 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import contentData from '../../data/contentData.json';
-import './Header.scss';
+import './_header.scss';
+import logoImage from '../../img/webp/bien_sans_lunette2_reduite.webp'; 
 
 const Header: React.FC = () => {
-  const { title, menu } = contentData.header;
-
   return (
     <header className="header">
-      <h1>{title}</h1>
+      <h1>Loading-Yann</h1>
+      <h2>Développeur Fullstack</h2>
       <nav>
         <ul>
-          {menu.map((item, index) => (
-            <li key={index}>
-              <Link to={item.path}>{item.label}</Link>
-            </li>
-          ))}
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
+      <img src={logoImage} alt="Logo" className="header__logo" />
     </header>
   );
 };

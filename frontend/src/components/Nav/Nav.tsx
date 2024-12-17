@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import './Nav.scss';
+import './_nav.scss';
 
 const Nav: React.FC = () => {
   return (

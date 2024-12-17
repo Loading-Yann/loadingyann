@@ -1,4 +1,18 @@
+@import '../../styles/_variables.scss';
+
 .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+  
+    &__logo {
+      width: 50px; // Taille de l'image
+      height: 50px;
+      border-radius: 50%; // Rendre l'image ronde
+      object-fit: cover; // Ajuster l'image sans déformation
+    }
+  
   background-color: #000;
   color: #00ff41;
   text-align: center;
@@ -28,3 +42,4 @@
     }
   }
 }
+
