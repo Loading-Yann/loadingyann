@@ -1,9 +1,13 @@
 import React from 'react';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
+import AppRouter from './routes/router';
+import './styles/_app.scss';
 
-const App = () => {
+const App: React.FC = () => {
   return (
-    <div>
-      <h1>Bienvenue sur Loading-Yann !</h1>
+    <div className="app">
+      <AppRouter />
     </div>
   );
 };

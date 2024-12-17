@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Contact.scss';
+import './_contact.scss';
 
 const Contact = () => {
   const [isForm, setIsForm] = useState(false);
