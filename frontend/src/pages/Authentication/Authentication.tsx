@@ -30,7 +30,6 @@ const Authentication: React.FC = () => {
         sessionStorage.setItem('token', data.token);
         sessionStorage.setItem('username', username);
         sessionStorage.setItem('userRole', data.role);
-        alert('Connexion réussie.');
         navigate('/'); // Redirection vers la page d'accueil
       } else {
         setError(data.message || 'Identifiants incorrects.');

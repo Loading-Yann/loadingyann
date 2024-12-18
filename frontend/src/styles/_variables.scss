@@ -3,11 +3,19 @@ $matrix-green: #00ff00;
 $background-dark: #111;
 $border-color: $matrix-green;
 
-// Typographie
-$font-family: 'Courier New', Courier, monospace;
+// Typographie (compatibilité et hiérarchie)
+$font-family: 'Courier New', Courier, monospace; // Ancienne variable pour compatibilité
+$font-family-primary: $font-family; // Alias pour la typographie principale
+$font-family-secondary: 'Arial', sans-serif;    // Typographie secondaire plus moderne
 
-// Autres variables
+// Tailles de polices
+$font-size-lg: 1.5rem; // Taille de police grande
+$font-size-md: 1rem;   // Taille de police moyenne
+$font-size-sm: 0.875rem; // Taille de police petite
+
+// Espacement et bordures
 $padding: 12px;
+$margin: 16px;
 $border-radius: 6px;
 
 // Breakpoints pour le responsive
@@ -16,3 +24,6 @@ $breakpoints: (
   medium: 768px,
   large: 1024px
 );
+
+// Autres effets
+$link-hover-shadow: 0 0 10px $matrix-green; // Effet hover pour les liens

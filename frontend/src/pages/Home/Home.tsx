@@ -1,15 +1,19 @@
-import React from 'react';
-import contentData from '../../data/contentData.json';
+import React, { useEffect } from 'react';
 import './_home.scss';
 
 const Home: React.FC = () => {
-  const { title, description } = contentData.home;
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      window.dispatchEvent(new Event('storage')); // Déclenche une mise à jour du Header
+    }
+  }, []);
 
   return (
-    <div className="home">
-      <h1>{title}</h1>
-      <p>{description}</p>
-    </div>
+    <main className="home">
+      <h1>Bienvenue sur la page d'accueil</h1>
+      <p>Découvrez mes projets et mes compétences en développement Fullstack.</p>
+    </main>
   );
 };
 
