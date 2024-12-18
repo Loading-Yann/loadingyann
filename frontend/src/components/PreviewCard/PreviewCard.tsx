@@ -1,11 +1,21 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './_previewcard.scss';
 
-const PreviewCard = ({ project, onEdit, onDelete, isAdmin }) => {
-  const defaultImage = 'path/to/default-image.jpg'; // À remplacer par une URL réelle ou un chemin local.
+interface PreviewCardProps {
+  project: {
+    _id: string;
+    name: string;
+    previewImage: string;
+    role: string;
+  };
+}
+
+const PreviewCard: React.FC<PreviewCardProps> = ({ project }) => {
+  const defaultImage = 'path/to/default-image.jpg'; // Remplace par ton image par défaut
 
   return (
-    <div className="preview-card">
+    <Link to={`/project/${project._id}`} className="preview-card">
       <img
         src={project.previewImage || defaultImage}
         alt={project.name}
@@ -15,13 +25,7 @@ const PreviewCard = ({ project, onEdit, onDelete, isAdmin }) => {
         <h3 className="preview-card__title">{project.name}</h3>
         <p className="preview-card__role">{project.role}</p>
       </div>
-      {isAdmin && (
-        <div className="preview-card__actions">
-          <button onClick={() => onEdit(project.id)}>✏️</button>
-          <button onClick={() => onDelete(project.id)}>🗑️</button>
-        </div>
-      )}
-    </div>
+    </Link>
   );
 };
 

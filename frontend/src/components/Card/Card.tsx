@@ -1,6 +1,6 @@
 import React from 'react';
-import Carousel from './Carousel';
-import './Card.scss';
+import Carousel from '../Carousel/Carousel';
+import './_card.scss';
 
 const Card = ({ project, onEdit, onDelete, isAdmin }) => {
   const defaultImage = 'path/to/default-image.jpg';

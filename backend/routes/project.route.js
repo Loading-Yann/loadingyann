@@ -113,10 +113,28 @@ router.get('/', async (req, res) => {
   }
 });
 
+
+
+router.get('/:id', async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+      console.log(`Projet avec l'ID ${req.params.id} introuvable.`);
+      return res.status(404).json({ message: 'Projet introuvable.' });
+    }
+    console.log(`Projet trouvé :`, project);
+    res.status(200).json(project);
+  } catch (error) {
+    console.error('Erreur lors de la récupération du projet :', error);
+    res.status(500).json({ message: 'Erreur interne du serveur.' });
+  }
+});
+
 // Route de fallback pour capturer les requêtes non reconnues
 router.all('*', (req, res) => {
   console.log(`Route non reconnue : ${req.method} ${req.originalUrl}`);
   res.status(404).json({ message: 'Route non trouvée dans project.route.js' });
 });
+
 
 export default router;

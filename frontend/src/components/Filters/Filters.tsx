@@ -1,7 +1,22 @@
 import React, { useState } from 'react';
 import './_filters.scss';
 
-const Filters = ({ onFilterChange }) => {
+interface FiltersProps {
+  filterOptions: {
+    roles: string[];
+    languages: string[];
+    clients: string[];
+    statuses: string[];
+  };
+  onFilterChange: (filters: {
+    role: string;
+    language: string;
+    client: string;
+    status: string;
+  }) => void;
+}
+
+const Filters: React.FC<FiltersProps> = ({ filterOptions, onFilterChange }) => {
   const [filters, setFilters] = useState({
     role: '',
     language: '',
@@ -9,7 +24,7 @@ const Filters = ({ onFilterChange }) => {
     status: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     const newFilters = { ...filters, [name]: value };
     setFilters(newFilters);
@@ -20,26 +35,35 @@ const Filters = ({ onFilterChange }) => {
     <div className="filters">
       <select name="role" onChange={handleChange}>
         <option value="">Tous les rôles</option>
-        <option value="Dev Frontend">Dev Frontend</option>
-        <option value="Dev Backend">Dev Backend</option>
-        <option value="Dev Fullstack">Dev Fullstack</option>
-        <option value="SEO & Performance">SEO & Performance</option>
+        {filterOptions.roles.map((role) => (
+          <option key={role} value={role}>
+            {role}
+          </option>
+        ))}
       </select>
       <select name="language" onChange={handleChange}>
         <option value="">Tous les langages</option>
-        <option value="JavaScript">JavaScript</option>
-        <option value="Python">Python</option>
-        <option value="React">React</option>
+        {filterOptions.languages.map((language) => (
+          <option key={language} value={language}>
+            {language}
+          </option>
+        ))}
       </select>
       <select name="client" onChange={handleChange}>
         <option value="">Tous les clients</option>
-        <option value="Client1">Client1</option>
-        <option value="Client2">Client2</option>
+        {filterOptions.clients.map((client) => (
+          <option key={client} value={client}>
+            {client}
+          </option>
+        ))}
       </select>
       <select name="status" onChange={handleChange}>
         <option value="">Tous les statuts</option>
-        <option value="en cours">En cours</option>
-        <option value="terminé">Terminé</option>
+        {filterOptions.statuses.map((status) => (
+          <option key={status} value={status}>
+            {status}
+          </option>
+        ))}
       </select>
     </div>
   );

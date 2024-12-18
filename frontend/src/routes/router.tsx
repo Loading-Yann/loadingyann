@@ -5,6 +5,7 @@ import Contact from '../pages/Contact/Contact';
 import Error from '../pages/Error/Error';
 import Auth from '../pages/Authentication/Authentication';
 import Projects from '../pages/Projets/Projets';
+import ProjectDetail from '../pages/ProjectDetail/ProjectDetail';
 
 const AppRouter: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const AppRouter: React.FC = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/admin" element={<Auth />} />
       <Route path="/projects" element={<Projects />} />
+      <Route path="/project/:id" element={<ProjectDetail />} />
       {/*<Route path="/messages" element={<Messages />} />
       <Route path="/presentator" element={<Presentator />} /> */}
       <Route path="*" element={<Error />} />

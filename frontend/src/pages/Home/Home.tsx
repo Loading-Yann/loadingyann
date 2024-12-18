@@ -25,6 +25,13 @@ const Home: React.FC = () => {
     status: '',
   });
 
+  const [filterOptions, setFilterOptions] = useState({
+    roles: ['Dev Frontend', 'Dev Backend', 'Dev Fullstack', 'SEO & Performance'],
+    languages: [] as string[],
+    clients: [] as string[],
+    statuses: ['en cours', 'terminé'],
+  });
+
   // Récupère les projets depuis le backend
   useEffect(() => {
     const fetchProjects = async () => {
@@ -34,6 +41,20 @@ const Home: React.FC = () => {
         if (response.ok) {
           setProjects(data);
           setFilteredProjects(data); // Initialisation des projets filtrés
+
+          // Extraction des options dynamiques pour `languages` et `clients`
+          const uniqueLanguages = Array.from(
+            new Set(data.flatMap((project: Project) => project.languages))
+          );
+          const uniqueClients = Array.from(
+            new Set(data.map((project: Project) => project.client))
+          );
+
+          setFilterOptions((prevOptions) => ({
+            ...prevOptions,
+            languages: uniqueLanguages,
+            clients: uniqueClients,
+          }));
         } else {
           console.error('Erreur lors de la récupération des projets :', data.message);
         }
@@ -78,16 +99,19 @@ const Home: React.FC = () => {
     <main className="home">
       <h1>Bienvenue sur la page d'accueil</h1>
       <p>Découvrez mes projets et mes compétences en développement Fullstack.</p>
-      <Filters onFilterChange={handleFilterChange} />
+      <Filters
+        filterOptions={filterOptions}
+        onFilterChange={handleFilterChange}
+      />
       <div className="projects">
         {filteredProjects.map((project) => (
           <PreviewCard
-            key={project.id}
-            project={project}
-            isAdmin={false} // Remplace par un état si nécessaire
-            onEdit={() => {}}
-            onDelete={() => {}}
-          />
+          key={project._id}
+          project={project}
+          isAdmin={false}
+          onEdit={() => {}}
+          onDelete={() => {}}
+        />        
         ))}
       </div>
     </main>
