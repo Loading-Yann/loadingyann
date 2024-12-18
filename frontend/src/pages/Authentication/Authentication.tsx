@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Ajout de useNavigate
 import './_authentication.scss';
 
 const Authentication: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Initialisation de navigate
 
   const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
@@ -26,8 +28,10 @@ const Authentication: React.FC = () => {
 
       if (response.ok) {
         sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('username', username);
+        sessionStorage.setItem('userRole', data.role);
         alert('Connexion réussie.');
-        window.location.href = '/admin';
+        navigate('/'); // Redirection vers la page d'accueil
       } else {
         setError(data.message || 'Identifiants incorrects.');
       }
