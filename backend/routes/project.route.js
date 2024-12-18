@@ -1,75 +1,93 @@
 import express from 'express';
+import upload from '../middlewares/upload.middleware.js';
+import sharp from 'sharp';
+import path from 'path';
 import Project from '../models/project.model.js';
-import auth from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-// Créer un nouveau projet (Admin uniquement)
-router.post('/create', auth, async (req, res) => {
-  if (req.user.quality !== 'admin') {
-    return res.status(403).json({ message: "Accès refusé. Rôle admin requis." });
-  }
+// Route pour créer un projet sans authentification
+router.post('/create', async (req, res) => {
+  console.log('Requête reçue sur POST /create sans authentification');
   try {
+    console.log('Corps de la requête :', req.body);
     const newProject = new Project(req.body);
+    console.log('Projet avant sauvegarde :', newProject);
     const savedProject = await newProject.save();
+    console.log('Projet enregistré :', savedProject);
     res.status(201).json(savedProject);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la création du projet.', error: error.message });
+    console.error('Erreur lors de la création du projet :', error);
+    res.status(500).json({ message: 'Erreur interne.', error: error.message });
   }
 });
 
-// Récupérer tous les projets
-router.get('/', async (req, res) => {
+// Route pour uploader une image
+router.post('/upload-image', upload.single('image'), async (req, res) => {
+  console.log('Requête reçue sur /upload-image');
   try {
-    const projects = await Project.find();
-    res.status(200).json(projects);
-  } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération des projets.', error: error.message });
-  }
-});
-
-// Récupérer un projet par ID
-router.get('/:id', async (req, res) => {
-  try {
-    const project = await Project.findById(req.params.id);
-    if (!project) {
-      return res.status(404).json({ message: 'Projet non trouvé.' });
+    if (!req.file) {
+      console.log('Aucun fichier téléchargé');
+      return res.status(400).json({ message: 'Aucun fichier téléchargé.' });
     }
-    res.status(200).json(project);
+
+    const { filename } = req.file; // Nom du fichier original
+    const webpFilename = `${filename.split('.')[0]}.webp`;
+    const outputPath = path.join(__dirname, '../images', webpFilename);
+
+    // Convertir l'image en WebP
+    await sharp(req.file.path)
+      .webp({ quality: 80 })
+      .toFile(outputPath);
+
+    console.log('Image convertie en WebP :', webpFilename);
+
+    res.status(200).json({
+      message: 'Image téléchargée et convertie avec succès.',
+      filename: webpFilename,
+      url: `/images/${webpFilename}`, // Chemin de l'image accessible
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération du projet.', error: error.message });
+    console.error('Erreur lors de la conversion de l\'image :', error);
+    res.status(500).json({ message: 'Erreur lors de la conversion de l\'image.', error: error.message });
   }
 });
 
-// Mettre à jour un projet (Admin uniquement)
-router.put('/:id', auth, async (req, res) => {
-  if (req.user.quality !== 'admin') {
-    return res.status(403).json({ message: "Accès refusé. Rôle admin requis." });
-  }
+// Route pour uploader plusieurs images
+router.post('/upload-gallery', upload.array('images', 10), async (req, res) => {
+  console.log('Requête reçue sur /upload-gallery');
   try {
-    const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedProject) {
-      return res.status(404).json({ message: 'Projet non trouvé.' });
+    if (!req.files || req.files.length === 0) {
+      console.log('Aucun fichier téléchargé');
+      return res.status(400).json({ message: 'Aucun fichier téléchargé.' });
     }
-    res.status(200).json(updatedProject);
-  } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la mise à jour du projet.', error: error.message });
-  }
-});
 
-// Supprimer un projet (Admin uniquement)
-router.delete('/:id', auth, async (req, res) => {
-  if (req.user.quality !== 'admin') {
-    return res.status(403).json({ message: "Accès refusé. Rôle admin requis." });
-  }
-  try {
-    const deletedProject = await Project.findByIdAndDelete(req.params.id);
-    if (!deletedProject) {
-      return res.status(404).json({ message: 'Projet non trouvé.' });
+    const uploadedFiles = [];
+
+    for (const file of req.files) {
+      const webpFilename = `${file.filename.split('.')[0]}.webp`;
+      const outputPath = path.join(__dirname, '../images', webpFilename);
+
+      await sharp(file.path)
+        .webp({ quality: 80 })
+        .toFile(outputPath);
+
+      uploadedFiles.push({
+        original: file.filename,
+        webp: webpFilename,
+        url: `/images/${webpFilename}`,
+      });
     }
-    res.status(200).json({ message: 'Projet supprimé avec succès.' });
+
+    console.log('Images converties et enregistrées :', uploadedFiles);
+
+    res.status(200).json({
+      message: 'Images téléchargées et converties avec succès.',
+      files: uploadedFiles,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la suppression du projet.', error: error.message });
+    console.error('Erreur lors de la conversion des images :', error);
+    res.status(500).json({ message: 'Erreur lors de la conversion des images.', error: error.message });
   }
 });
 

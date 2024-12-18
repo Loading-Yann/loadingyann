@@ -1,0 +1,26 @@
+@import '../../styles/_variables.scss';
+@import '../../styles/_mixins.scss';
+
+.projets {
+  @include form-container(800px);
+
+  h2 {
+    margin-bottom: $margin;
+    font-size: $font-size-lg;
+  }
+
+  form {
+    width: 100%;
+    max-width: 600px;
+
+    input,
+    textarea,
+    select {
+      @include form-field;
+    }
+
+    button {
+      @include form-button;
+    }
+  }
+}

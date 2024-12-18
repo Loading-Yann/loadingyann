@@ -1,0 +1,61 @@
+// Champs de formulaire
+@mixin form-field {
+  width: 100%;
+  padding: $padding;
+  margin-bottom: $padding;
+  border: 2px solid $border-color;
+  background-color: transparent;
+  color: $matrix-green;
+  border-radius: $border-radius;
+  outline: none;
+  font-family: $font-family-primary;
+  font-size: $font-size-md;
+
+  &::placeholder {
+    color: lighten($matrix-green, 30%);
+  }
+
+  &:focus {
+    box-shadow: 0 0 10px $matrix-green;
+  }
+}
+
+@mixin form-button {
+  background-color: $matrix-green;
+  color: $background-dark;
+  border: 2px solid $matrix-green;
+  padding: $padding;
+  border-radius: $border-radius;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: $font-family-secondary;
+  transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: lighten($matrix-green, 20%);
+    color: $matrix-green;
+    box-shadow: 0 0 15px $matrix-green, 0 0 30px $matrix-green;
+  }
+
+  &:active {
+    background-color: darken($matrix-green, 10%);
+    box-shadow: 0 0 10px $matrix-green;
+  }
+}
+
+
+// Conteneur de formulaire
+@mixin form-container($max-width: 600px) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: $max-width;
+  margin: $margin auto;
+  padding: $padding * 2;
+  background-color: $background-dark;
+  color: $matrix-green;
+  font-family: $font-family-primary;
+}
