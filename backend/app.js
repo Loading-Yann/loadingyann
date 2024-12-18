@@ -9,13 +9,14 @@ import projectRoutes from './routes/project.route.js';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
+import multer from 'multer';
 import 'dotenv/config';
+import logger from './logs/winston.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware pour toutes les requêtes
 app.use((req, res, next) => {
@@ -68,6 +69,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/projects', projectRoutes);
 console.log('Routes principales montées : /api/auth, /api/messages, /api/projects');
+console.log('Définition de la route /api/test');
+app.get('/api/test', (req, res) => {
+  console.log('Route /api/test atteinte');
+  res.status(200).json({ message: 'Test route OK' });
+});
 
 // Page d'accueil
 app.get('/', (req, res) => {
@@ -87,7 +93,15 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Erreur interne du serveur.', error: err.message });
 });
 
-// Démarrage du serveur
-app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+// Winston logs pour toutes les requêtes
+app.use((req, res, next) => {
+  logger.info(`Requête reçue : ${req.method} ${req.originalUrl}`);
+  next();
 });
+
+app.use((err, req, res, next) => {
+  logger.error(`Erreur : ${err.message}`);
+  res.status(500).json({ message: 'Erreur interne du serveur.' });
+});
+
+export default app;

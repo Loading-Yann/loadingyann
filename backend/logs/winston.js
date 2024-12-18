@@ -1,18 +1,26 @@
-const { createLogger, format, transports } = require('winston');
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import winston from 'winston';
 
-const logger = createLogger({
-  format: format.combine(
-    format.timestamp(),
-    format.json()
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
   ),
   transports: [
-    new transports.File({ filename: './logs/error.log', level: 'error' }),
-    new transports.File({ filename: './logs/combined.log' }),
+    new winston.transports.File({ filename: path.join(__dirname, 'error.log'), level: 'error' }),
+    new winston.transports.File({ filename: path.join(__dirname, 'combined.log') }),
   ],
 });
 
-logger.stream = {
-  write: (message) => logger.info(message),
-};
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple(),
+  }));
+}
 
-module.exports = logger;
+export default logger;
