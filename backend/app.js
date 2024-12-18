@@ -5,15 +5,17 @@ import rateLimit from 'express-rate-limit';
 import winston from './logs/winston.js';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
+import projectRoutes from './routes/project.route.js';
 import 'dotenv/config';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares de sécurité
-app.use(helmet());
 app.use(express.json());
+app.use(helmet());
 app.use(morgan('combined', { stream: winston.stream }));
+app.use('/api/projects', projectRoutes);
 
 // Rate Limiter
 const limiter = rateLimit({
