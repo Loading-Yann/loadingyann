@@ -1,10 +1,22 @@
 import express from 'express';
 import upload from '../middlewares/upload.middleware.js';
 import sharp from 'sharp';
-import path from 'path';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import Project from '../models/project.model.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const router = express.Router();
+
+console.log('Chargement de project.route.js');
+
+// Route de test
+router.get('/test', (req, res) => {
+  console.log('Route GET /test atteinte');
+  res.status(200).json({ message: 'Route test OK' });
+});
 
 // Route pour créer un projet sans authentification
 router.post('/create', async (req, res) => {
@@ -89,6 +101,12 @@ router.post('/upload-gallery', upload.array('images', 10), async (req, res) => {
     console.error('Erreur lors de la conversion des images :', error);
     res.status(500).json({ message: 'Erreur lors de la conversion des images.', error: error.message });
   }
+});
+
+// Route de fallback pour capturer les requêtes non reconnues
+router.all('*', (req, res) => {
+  console.log(`Route non reconnue : ${req.method} ${req.originalUrl}`);
+  res.status(404).json({ message: 'Route non trouvée dans project.route.js' });
 });
 
 export default router;

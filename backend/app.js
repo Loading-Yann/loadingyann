@@ -6,9 +6,13 @@ import winston from './logs/winston.js';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import projectRoutes from './routes/project.route.js';
-import path from 'path';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import cors from 'cors';
 import 'dotenv/config';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,8 +26,11 @@ app.use((req, res, next) => {
 // Middleware pour autoriser les CORS
 app.use(cors());
 
-// Middlewares de sécurité
+// Middlewares de parsing JSON
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Pour parser les URL encodées si nécessaire
+
+// Middlewares de sécurité
 app.use(helmet());
 app.use(morgan('combined', { stream: winston.stream }));
 
@@ -56,17 +63,28 @@ app.use('/api/projects', (req, res, next) => {
 });
 
 // Routes
+console.log('Montage des routes principales...');
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/projects', projectRoutes);
-
-// Logs pour vérifier les routes principales
 console.log('Routes principales montées : /api/auth, /api/messages, /api/projects');
 
 // Page d'accueil
 app.get('/', (req, res) => {
   console.log('Page d\'accueil demandée');
   res.send('Bienvenue sur le backend de Loading-Yann !');
+});
+
+// Gestion des routes non trouvées
+app.use((req, res, next) => {
+  console.error(`Route non trouvée : ${req.method} ${req.originalUrl}`);
+  res.status(404).json({ message: 'Route non trouvée.' });
+});
+
+// Gestion des erreurs globales
+app.use((err, req, res, next) => {
+  console.error(`Erreur serveur : ${err.message}`);
+  res.status(500).json({ message: 'Erreur interne du serveur.', error: err.message });
 });
 
 // Démarrage du serveur
