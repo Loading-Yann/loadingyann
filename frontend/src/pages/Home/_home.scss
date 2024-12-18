@@ -1,0 +1,80 @@
+@import '../../styles/_variables.scss';
+@import '../../styles/_mixins.scss';
+
+.home {
+  // Style principal pour la page
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $padding * 2;
+
+  h1 {
+    margin-bottom: $margin * 2;
+    font-size: $font-size-lg;
+    color: $matrix-green;
+    text-shadow: $link-hover-shadow;
+  }
+
+  p {
+    margin-bottom: $margin;
+    font-size: $font-size-md;
+    color: lighten($matrix-green, 30%);
+  }
+
+  // Section des filtres
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: $margin;
+
+    select,
+    button {
+      @include form-button;
+      width: auto;
+      padding: $padding / 2 $padding;
+      margin: 0;
+      text-transform: none;
+
+      &:hover {
+        box-shadow: 0 0 10px lighten($matrix-green, 20%);
+      }
+    }
+  }
+
+  // Section des projets
+  .projects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $margin;
+    justify-content: center;
+    margin-top: $margin * 2;
+
+    .preview-card {
+      width: 30%;
+      margin-bottom: $margin;
+      background-color: lighten($background-dark, 5%);
+      border-radius: $border-radius;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+
+      &:hover {
+        transform: scale(1.02);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 0 20px $matrix-green;
+      }
+    }
+
+    @media (max-width: map-get($breakpoints, medium)) {
+      .preview-card {
+        width: 45%;
+      }
+    }
+
+    @media (max-width: map-get($breakpoints, small)) {
+      .preview-card {
+        width: 90%;
+      }
+    }
+  }
+}

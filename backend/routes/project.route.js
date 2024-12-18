@@ -103,6 +103,16 @@ router.post('/upload-gallery', upload.array('images', 10), async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  try {
+    const projects = await Project.find();
+    res.status(200).json(projects);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des projets :', error);
+    res.status(500).json({ message: 'Erreur interne du serveur.' });
+  }
+});
+
 // Route de fallback pour capturer les requêtes non reconnues
 router.all('*', (req, res) => {
   console.log(`Route non reconnue : ${req.method} ${req.originalUrl}`);
