@@ -15,6 +15,7 @@ mongoose
   .catch((err) => console.error('❌ Erreur de connexion MongoDB :', err));
 
 // Démarrage du serveur
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
 });
+

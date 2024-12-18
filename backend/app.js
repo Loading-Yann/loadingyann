@@ -25,7 +25,12 @@ app.use((req, res, next) => {
 });
 
 // Middleware pour autoriser les CORS
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Remplace par l'URL de ton frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
+
 
 // Middlewares de parsing JSON
 app.use(express.json());

@@ -1,9 +1,4 @@
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import winston from 'winston';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const logger = winston.createLogger({
   level: 'info',
@@ -12,8 +7,8 @@ const logger = winston.createLogger({
     winston.format.json()
   ),
   transports: [
-    new winston.transports.File({ filename: path.join(__dirname, 'error.log'), level: 'error' }),
-    new winston.transports.File({ filename: path.join(__dirname, 'combined.log') }),
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' }),
   ],
 });
 
@@ -22,5 +17,10 @@ if (process.env.NODE_ENV !== 'production') {
     format: winston.format.simple(),
   }));
 }
+
+// Fournir un stream compatible pour morgan
+logger.stream = {
+  write: (message) => logger.info(message.trim()),
+};
 
 export default logger;
