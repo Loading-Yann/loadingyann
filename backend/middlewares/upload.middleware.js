@@ -1,10 +1,22 @@
 import multer from 'multer';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+// Résolution du chemin
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Assure-toi que le dossier existe
+const imageDir = path.join(__dirname, '../images');
+if (!fs.existsSync(imageDir)) {
+  fs.mkdirSync(imageDir, { recursive: true });
+}
 
 // Configuration de Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../images')); // Dossier de destination
+    cb(null, imageDir); // Dossier de destination
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
