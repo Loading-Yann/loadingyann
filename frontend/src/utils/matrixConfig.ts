@@ -6,12 +6,14 @@ const matrixConfig = {
     kanji: 0.05,   // 5% kanji ou autres caractères
   },
   speed: {
-    min: 50, // Vitesse minimale (ms)
-    max: 50, // Vitesse maximale (ms)
+    min: 50,    // Vitesse minimale (ms)
+    max: 1000,  // Vitesse maximale (ms)
+    average: 300, // Vitesse moyenne (ms)
+    immobile: false, // Activer/désactiver le mouvement
   },
-  fontSize: 2, // Taille de la police
+  fontSize: 8, // Taille de la police
   colors: {
-    background: 'rgba(17, 17, 17, 0.05)', // Couleur de fond
+    background: 'rgba(17, 17, 17, 0.25)', // Couleur de fond
     text: '#00ff00', // Couleur du texte
   },
 };

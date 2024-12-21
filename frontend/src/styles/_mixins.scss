@@ -21,7 +21,7 @@
 }
 
 @mixin form-button {
-  background-color: $matrix-green;
+  background-color: black;
   color: $background-dark;
   border: 2px solid $matrix-green;
   padding: $padding;
@@ -34,7 +34,7 @@
 
   &:hover {
     background-color: lighten($matrix-green, 20%);
-    color: $matrix-green;
+    color: black;
     box-shadow: 0 0 15px $matrix-green, 0 0 30px $matrix-green;
   }
 

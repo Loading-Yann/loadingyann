@@ -7,7 +7,7 @@
     ]
   },
   "home": {
-    "title": "Bienvenue sur la page d'accueil de Loading-Yann !",
+    "title": "Bienvenue !",
     "description": "Découvrez mes compétences et projets dans le domaine du développement web."
   },
   "contact": {
@@ -17,6 +17,6 @@
   "footer": {
     "company": "Loading-Yann",
     "email": "loading.yann@gmail.com",
-    "phone": "06 XX XX XX XX"
+    "phone": "+336 72 300 450"
   }
 }
