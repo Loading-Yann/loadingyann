@@ -3,15 +3,16 @@ import Carousel from '../Carousel/Carousel';
 import './_card.scss';
 
 const Card = ({ project, onEdit, onDelete, isAdmin }) => {
-  const defaultImage = 'path/to/default-image.jpg';
+  const defaultImage = 'http://localhost:3000/images/default-image.webp';
 
   return (
     <div className="card">
       <img
-        src={project.previewImage || defaultImage}
+        src={project.previewImage ? project.previewImage : defaultImage}
         alt={project.name}
         className="card__image"
       />
+
       <div className="card__details">
         <h3 className="card__title">{project.name}</h3>
         <p className="card__description">{project.specifics}</p>

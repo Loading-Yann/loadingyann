@@ -9,12 +9,21 @@ import projectRoutes from './routes/project.route.js';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
-import multer from 'multer';
 import 'dotenv/config';
 import logger from './logs/winston.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+let __filename;
+let __dirname;
+
+// Utiliser des valeurs statiques dans l'environnement de test
+if (process.env.NODE_ENV === 'test') {
+  __filename = 'mock.js'; // Chemin fictif pour Jest
+  __dirname = path.resolve(); // Dossier racine pour Jest
+} else {
+  __filename = fileURLToPath(import.meta.url); // Pour le mode production
+  __dirname = dirname(__filename);
+}
+
 
 const app = express();
 
@@ -26,9 +35,11 @@ app.use((req, res, next) => {
 
 // Middleware pour autoriser les CORS
 app.use(cors({
-  origin: 'http://localhost:5173', // Remplace par l'URL de ton frontend
+  origin: 'http://localhost:5173', // URL du frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'], // En-têtes nécessaires
+  exposedHeaders: ['Content-Disposition'], // Pour les en-têtes spécifiques
+  credentials: true, // Pour autoriser les cookies, si nécessaire
 }));
 
 
@@ -42,7 +53,7 @@ app.use(morgan('combined', { stream: winston.stream }));
 
 // Logs pour vérifier le chargement des fichiers statiques
 app.use('/images', (req, res, next) => {
-  console.log(`Accès au dossier static /images : ${req.originalUrl}`);
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173'); // Autorise le frontend
   next();
 });
 app.use('/images', express.static(path.join(__dirname, 'images')));
@@ -54,31 +65,10 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Logs pour les routes API
-app.use('/api/auth', (req, res, next) => {
-  console.log(`Requête reçue sur /api/auth : ${req.method} ${req.url}`);
-  next();
-});
-app.use('/api/messages', (req, res, next) => {
-  console.log(`Requête reçue sur /api/messages : ${req.method} ${req.url}`);
-  next();
-});
-app.use('/api/projects', (req, res, next) => {
-  console.log(`Requête reçue sur /api/projects : ${req.method} ${req.url}`);
-  next();
-});
-
-// Routes
-console.log('Montage des routes principales...');
+// Routes API
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/projects', projectRoutes);
-console.log('Routes principales montées : /api/auth, /api/messages, /api/projects');
-console.log('Définition de la route /api/test');
-app.get('/api/test', (req, res) => {
-  console.log('Route /api/test atteinte');
-  res.status(200).json({ message: 'Test route OK' });
-});
 
 // Page d'accueil
 app.get('/', (req, res) => {
@@ -86,27 +76,15 @@ app.get('/', (req, res) => {
   res.send('Bienvenue sur le backend de Loading-Yann !');
 });
 
-// Gestion des routes non trouvées
+// Gestion des erreurs
 app.use((req, res, next) => {
   console.error(`Route non trouvée : ${req.method} ${req.originalUrl}`);
   res.status(404).json({ message: 'Route non trouvée.' });
 });
 
-// Gestion des erreurs globales
 app.use((err, req, res, next) => {
   console.error(`Erreur serveur : ${err.message}`);
   res.status(500).json({ message: 'Erreur interne du serveur.', error: err.message });
-});
-
-// Winston logs pour toutes les requêtes
-app.use((req, res, next) => {
-  logger.info(`Requête reçue : ${req.method} ${req.originalUrl}`);
-  next();
-});
-
-app.use((err, req, res, next) => {
-  logger.error(`Erreur : ${err.message}`);
-  res.status(500).json({ message: 'Erreur interne du serveur.' });
 });
 
 export default app;

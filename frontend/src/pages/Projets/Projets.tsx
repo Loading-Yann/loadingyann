@@ -28,33 +28,33 @@ const Projets: React.FC = () => {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
-
+  
     const file = e.target.files[0];
     const uploadData = new FormData();
     uploadData.append('image', file);
-
+    uploadData.append('projectName', formData.name); // Ajoute le nom du projet
+  
     try {
-      setUploading(true);
       const response = await fetch(`${API_URL}/api/projects/upload-image`, {
         method: 'POST',
         body: uploadData,
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        setFormData((prev) => ({ ...prev, previewImage: data.url }));
-        setMessage('Image téléchargée avec succès !');
+        setFormData((prev) => ({ ...prev, previewImage: data.url })); // Met à jour l'URL dans le formulaire
+        setMessage('Image téléchargée et convertie avec succès !');
       } else {
         setMessage(data.message || 'Erreur lors du téléchargement de l\'image.');
       }
     } catch (error) {
       console.error('Erreur lors de l\'upload :', error);
       setMessage('Impossible de communiquer avec le serveur.');
-    } finally {
-      setUploading(false);
     }
   };
+  
+  
 
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;

@@ -3,7 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 
-// Résolution du chemin
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -13,14 +12,28 @@ if (!fs.existsSync(imageDir)) {
   fs.mkdirSync(imageDir, { recursive: true });
 }
 
+// Middleware pour parser `req.body` avant Multer
+const ensureBodyParsed = (req, res, next) => {
+  if (req.headers['content-type']?.includes('multipart/form-data')) {
+    multer().none()(req, res, next);
+  } else {
+    next();
+  }
+};
+
 // Configuration de Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, imageDir); // Dossier de destination
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `${uniqueSuffix}-${file.originalname}`); // Nom unique
+    const projectName = req.body.projectName?.replace(/\s+/g, '_') || 'default';
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const uniqueSuffix = Math.round(Math.random() * 1e9);
+
+    const fileName = `${projectName}-${timestamp}-${uniqueSuffix}.webp`;
+    console.log('Nom généré pour le fichier :', fileName);
+    cb(null, fileName);
   },
 });
 
@@ -36,4 +49,4 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-export default upload;
+export { ensureBodyParsed, upload };

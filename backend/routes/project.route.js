@@ -1,8 +1,9 @@
 import express from 'express';
-import upload from '../middlewares/upload.middleware.js';
+import { upload, ensureBodyParsed } from '../middlewares/upload.middleware.js';
 import sharp from 'sharp';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import Project from '../models/project.model.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -35,38 +36,53 @@ router.post('/create', async (req, res) => {
 });
 
 // Route pour uploader une image
-router.post('/upload-image', upload.single('image'), async (req, res) => {
-  console.log('Requête reçue sur /upload-image');
-  try {
-    if (!req.file) {
-      console.log('Aucun fichier téléchargé');
-      return res.status(400).json({ message: 'Aucun fichier téléchargé.' });
+router.post(
+  '/upload-image',
+  ensureBodyParsed, // Parse `req.body` avant Multer
+  upload.single('image'),
+  async (req, res) => {
+    console.log('Requête reçue sur /upload-image');
+    try {
+      if (!req.file) {
+        console.log('Aucun fichier téléchargé');
+        return res.status(400).json({ message: 'Aucun fichier téléchargé.' });
+      }
+
+      console.log('Fichier reçu par Multer :', req.file);
+
+      const { filename, path: filePath } = req.file;
+      const webpFilename = filename; // Nom déjà en .webp grâce à Multer
+      const outputPath = path.join(__dirname, '../images', webpFilename);
+
+      // Convertir l'image en WebP
+      await sharp(filePath)
+        .webp({ quality: 80 })
+        .toFile(outputPath);
+
+      console.log('Image convertie et enregistrée :', webpFilename);
+
+      // Supprimer le fichier original
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error('Erreur lors de la suppression du fichier original :', err.message);
+        } else {
+          console.log('Fichier original supprimé avec succès :', filePath);
+        }
+      });
+
+      res.status(200).json({
+        message: 'Image téléchargée et convertie avec succès.',
+        url: `${process.env.BACKEND_URL || 'http://localhost:3000'}/images/${webpFilename}`,
+      });
+    } catch (error) {
+      console.error('Erreur lors de la conversion de l\'image :', error.message);
+      res.status(500).json({ message: 'Erreur lors de la conversion de l\'image.', error: error.message });
     }
-
-    const { filename } = req.file; // Nom du fichier original
-    const webpFilename = `${filename.split('.')[0]}.webp`;
-    const outputPath = path.join(__dirname, '../images', webpFilename);
-
-    // Convertir l'image en WebP
-    await sharp(req.file.path)
-      .webp({ quality: 80 })
-      .toFile(outputPath);
-
-    console.log('Image convertie en WebP :', webpFilename);
-
-    res.status(200).json({
-      message: 'Image téléchargée et convertie avec succès.',
-      filename: webpFilename,
-      url: `/images/${webpFilename}`, // Chemin de l'image accessible
-    });
-  } catch (error) {
-    console.error('Erreur lors de la conversion de l\'image :', error);
-    res.status(500).json({ message: 'Erreur lors de la conversion de l\'image.', error: error.message });
   }
-});
+);
 
 // Route pour uploader plusieurs images
-router.post('/upload-gallery', upload.array('images', 10), async (req, res) => {
+router.post('/upload-gallery', ensureBodyParsed, upload.array('images', 10), async (req, res) => {
   console.log('Requête reçue sur /upload-gallery');
   try {
     if (!req.files || req.files.length === 0) {
@@ -113,8 +129,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-
-
 router.get('/:id', async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -135,6 +149,5 @@ router.all('*', (req, res) => {
   console.log(`Route non reconnue : ${req.method} ${req.originalUrl}`);
   res.status(404).json({ message: 'Route non trouvée dans project.route.js' });
 });
-
 
 export default router;

@@ -105,6 +105,7 @@ const Home: React.FC = () => {
       />
       <div className="projects">
         {filteredProjects.map((project) => (
+          
           <PreviewCard
           key={project._id}
           project={project}

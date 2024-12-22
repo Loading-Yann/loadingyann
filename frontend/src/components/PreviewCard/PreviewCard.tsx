@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './_previewcard.scss';
 
+
 interface PreviewCardProps {
   project: {
     _id: string;
@@ -12,7 +13,7 @@ interface PreviewCardProps {
 }
 
 const PreviewCard: React.FC<PreviewCardProps> = ({ project }) => {
-  const defaultImage = 'path/to/default-image.jpg'; // Remplace par ton image par défaut
+  const defaultImage = 'http://localhost:3000/images/default-image.webp';
 
   return (
     <Link to={`/project/${project._id}`} className="preview-card">
